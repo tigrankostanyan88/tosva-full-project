@@ -1,0 +1,35 @@
+html, body, #root{
+  margin: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    user-select: none; 
+    overflow-x: hidden;
+}code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+      monospace;
+}*{
+    margin: 0%;
+    padding: 0%;
+    box-sizing: border-box;
+    list-style: none;
+}html, body {
+  touch-action: manipulation;
+}::-webkit-scrollbar { 
+    width: 0px;  
+    background:rgba(69, 69, 69 , 1); 
+}::-webkit-scrollbar-thumb { 
+    background: #CBCBCB;
+    border-radius: 9em; 
+    box-shadow: inset 1px 1px 10px rgb(255, 255, 255);
+}::-webkit-scrollbar-thumb:hover { 
+    background: rgb(90, 90, 90);
+}
+  @media (prefers-color-scheme: dark) {
+    body {
+        background: linear-gradient(90deg, rgba(35, 45, 60, 0.95), rgba(50, 80, 70, 0.8));
+        color: #f1f5f9; /* բաց տեքստ */
+    }
+  }
+  

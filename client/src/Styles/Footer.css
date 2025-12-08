@@ -1,0 +1,51 @@
+footer{
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 80px;
+    /* background-color: rgb(230, 230, 230); */
+    /* border-top: 1px solid #ddd; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}.home{
+    width: 50px;
+    height: 50px;
+    background: url(../../public/Icons/home.png) no-repeat center center;
+    background-size: contain;
+}.footerList {
+    list-style: none;
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+}.footerList li{
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}.footerList a{
+    text-decoration: none;
+}.home,
+.trade,
+.assets{
+    width: 24px;
+    height: 24px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}.home{
+    background-image: url("/public/Icons/home.png");
+}.trade{
+    background-image: url("/public/Icons/trade.png");
+}.assets{
+    background-image: url("/public/Icons/assets.png");
+}.activeLink .home,
+.activeLink .trade,
+.activeLink .assets{
+        filter: brightness(0) saturate(100%) invert(83%) sepia(17%) saturate(636%) 
+          hue-rotate(56deg) brightness(96%) contrast(91%);
+}
+  

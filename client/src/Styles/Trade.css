@@ -1,0 +1,78 @@
+.cardTitle { text-align:center; font-size:18px; margin:0 0 12px 0; color:#bfe3b2; font-weight:700; }
+
+.formGroup { margin-bottom:14px; }
+.label { display:block; font-size:13px; margin-bottom:6px; color:#b5d8a6; }
+
+.searchWrap { position:relative; }
+.searchInput {
+width:100%;
+padding:12px 14px;
+border-radius:10px;
+border:1px solid rgba(255,255,255,0.03);
+background: rgba(6,35,30,0.35);
+color: #dff7d7;
+outline:none;
+box-sizing:border-box;
+}
+.searchInput:focus { box-shadow:0 0 0 3px rgba(163,214,163,0.08); }
+
+.suggestionList {
+position:absolute;
+left:0; right:0; top:48px;
+background: rgba(6,35,30,0.92);
+border-radius:10px;
+padding:6px 6px;
+box-shadow:0 10px 30px rgba(0,0,0,0.6);
+z-index:30;
+max-height:220px; overflow:auto;
+}
+.suggestionItem { padding:10px; border-radius:8px; cursor:pointer; }
+.suggestionItem:hover { background: rgba(12,60,50,0.35); }
+.suggestionRow { display:flex; justify-content:space-between; align-items:center; gap:8px; }
+.suggestionName { font-weight:700; }
+.suggestionCode { opacity:0.8; }
+.suggestionPrice { font-size:12px; opacity:0.75; margin-top:6px; }
+
+.tradeCodeInput, .qtyInput {
+width:100%;
+padding:12px 14px;
+border-radius:10px;
+border:1px solid rgba(255,255,255,0.03);
+background: rgba(6,35,30,0.28);
+color:#dff7d7;
+outline:none;
+}
+
+.gridCols { display:flex; gap:12px; }
+.col { flex:1; }
+
+.typeButtons { display:flex; gap:8px; }
+.typeButton {
+flex:1; padding:10px 8px; border-radius:10px; border:none; cursor:pointer; font-weight:700;
+background: rgba(6,35,30,0.28);
+}
+.typeButton:focus { outline:none; }
+.activeBuy { background: linear-gradient(90deg,#B7F2B0,#88D07A); color:#072012; }
+.activeSell { background: linear-gradient(90deg,#ffb3a7,#ff7f6b); color:#2b0b00; }
+
+.selectedCard { margin-top:12px; padding:14px; border-radius:12px; background: rgba(6,35,30,0.24); display:flex; justify-content:space-between; align-items:center; }
+.smallLabel { font-size:12px; opacity:0.8; }
+.selectedName { font-size:16px; font-weight:700; }
+.selectedPrice { font-size:16px; font-weight:700; }
+
+.actionsRow { display:flex; gap:12px; margin-top:12px; }
+.confirmButton { flex:1; padding:12px; border-radius:999px; border:none; cursor:pointer; font-weight:800; background:linear-gradient(90deg,#b6f59b,#9bdf73); color:#062417; box-shadow:0 10px 30px rgba(0,0,0,0.45); }
+.clearButton { width:88px; padding:12px; border-radius:999px; border:none; cursor:pointer; background: rgba(255,255,255,0.03); color:#dff7d7; font-weight:700; }
+
+.feedbackMessage { margin-top:10px; color:#f8e0b8; font-weight:600; }
+
+.footerNav { width:100%; max-width:720px; display:flex; justify-content:space-between; padding:18px 24px; margin-top:18px; }
+.navItem { opacity:0.85; }
+
+/* Responsive tweaks */
+@media (max-width:520px) {
+.heroImage { height:140px; }
+.headerBar { padding:14px; }
+.mainCard { padding:16px; }
+.gridCols { flex-direction:column; }
+}

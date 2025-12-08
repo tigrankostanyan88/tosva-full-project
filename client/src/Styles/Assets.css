@@ -1,0 +1,333 @@
+.tosvaContainer {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}.profileSection {
+    width: 100%;
+    height: 100px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0px 15px;
+    box-shadow: 0 0 25px rgba(0, 255, 136, 0.1);
+    backdrop-filter: blur(6px);
+}.avatar img{
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    border: 2px solid #00ff88;
+    transition: 0.3s ease;
+}.avatar img:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 15px #00ff88;
+}.profileInfo {
+    flex: 1;
+    margin-left: 12px;
+}.userId {
+    font-size: 16px;
+    font-weight: 600;
+    color: rgb(165, 210, 133);
+}.userAccount {
+    font-size: 14px;
+    color: #a5d285;
+}.icons {
+    display: flex;
+    gap: 10px;
+}.iconButton {
+    background: none;
+    border: none;
+    color: #00ff88;
+    font-size: 22px;
+    cursor: pointer;
+    transition: 0.3s ease;
+}.iconButton:hover {
+    transform: scale(1.2);
+    color: #33ffaa;
+  }.balanceSection {
+    width: 100%;
+    height: 100px;
+    display: flex;
+    flex-direction: column;    
+    justify-content: space-around;
+    /* background: linear-gradient(135deg, rgba(35, 45, 60, 0.95), rgba(50, 80, 70, 0.8));
+    box-shadow: inset 0 0 30px rgba(0, 255, 136, 0.05),
+                0 0 35px rgba(0, 255, 136, 0.12); */
+  }
+  
+  .label {
+    color: rgb(165, 210, 133);
+    font-size: 16px;
+    letter-spacing: 1px;
+    padding: 0px 15px;
+
+  }
+  
+  .balanceValue {
+    font-size: 26px;
+    font-weight: 700;
+    color: #00ff88;
+    transition: 0.3s ease-in-out;
+  }
+  
+  .balanceValue:hover {
+    text-shadow: 0 0 15px #00ff88;
+  }
+  
+  .balanceRow {
+    display: flex;
+    justify-content: space-between;
+    padding: 0px 15px;
+  }
+  .balanceRow > div {
+    display: flex;
+    align-items: center;
+  }
+  .spin {
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  
+  /* ---- Buttons ---- */
+  .actionButtons {
+    width: 100%;
+    max-width: 420px;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 45px;
+    gap: 12px;
+  }
+  
+  .actionButtons button {
+    flex: 1;
+    background: linear-gradient(135deg, rgba(35, 45, 60, 0.95), rgba(50, 80, 70, 0.8));
+    border: 1px solid #00ff88;
+    color: #00ff88;
+    font-weight: 600;
+    padding: 14px 0;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 0.5px;
+  }
+  
+  .actionButtons button:hover {
+    background: #00ff88;
+    color: #000;
+    box-shadow: 0 0 20px #00ff88;
+    transform: translateY(-3px);
+  }/* ================================
+   NEW: Smooth hide/show animation
+================================ */
+.fadeIn {
+  opacity: 1;
+  transition: opacity 0.35s ease-in-out;
+}
+.fadeOut {
+  opacity: 0.25;
+  transition: opacity 0.35s ease-in-out;
+}
+
+/* ================================
+   NEW: Earnings Grid
+================================ */
+.earningsGrid {
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 25px;
+  padding: 0 15px;
+  gap: 12px;
+}
+
+.earnCard {
+  flex: 1;
+  background: rgba(35, 45, 60, 0.65);
+  border: 1px solid #00ff88;
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 0 15px rgba(0, 255, 136, 0.12);
+}
+
+.earnLabel {
+  color: rgb(165, 210, 133);
+  font-size: 13px;
+}
+
+.earnValue {
+  margin-top: 5px;
+  font-size: 20px;
+  font-weight: 600;
+  color: #00ff88;
+}
+
+/* ================================
+   NEW: Transactions List
+================================ */
+.transactionsBox {
+  width: 100%;
+  max-width: 420px;
+  margin-top: 30px;
+  padding: 15px;
+}
+
+.transTitle {
+  color: #a5d285;
+  font-size: 15px;
+  margin-bottom: 10px;
+}
+
+.transItem {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(0, 255, 136, 0.25);
+  color: #c9ffda;
+}
+
+.transPlus {
+  color: #00ff88;
+  font-weight: 600;
+}
+
+.transMinus {
+  color: #ff7272;
+  font-weight: 600;
+}
+
+.transType {
+  flex: 1;
+  text-align: center;
+  opacity: 0.8;
+}
+
+.transTime {
+  font-size: 12px;
+  opacity: 0.6;
+}
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.modalBox {
+  background: #fff;
+  padding: 22px;
+  width: 90%;
+  max-width: 360px;
+  border-radius: 14px;
+  animation: fadeIn 0.25s ease;
+}
+
+.amountInput {
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  margin-top: 10px;
+  font-size: 16px;
+}
+
+.modalNext, .modalClose {
+  margin-top: 18px;
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  background: #2974ff;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.modalClose {
+  background: #555;
+}
+
+.walletBox {
+  margin-top: 12px;
+  background: #f7f7f7;
+  padding: 12px;
+  border-radius: 10px;
+  position: relative;
+}
+
+.walletText {
+  word-break: break-all;
+  font-size: 15px;
+}
+
+.copyBtn {
+  margin-top: 10px;
+  padding: 7px 16px;
+  border-radius: 10px;
+  background: #000;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.92); }
+  to { opacity: 1; transform: scale(1); }
+}/* Overlay */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5); /* թափանցիկ սև ֆոն */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}.modalContent {
+  padding: 25px 30px;
+  border-radius: 12px;
+  max-width: 450px;
+  width: 90%;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+  text-align: center;
+}.modalContent input {
+  width: 100%;
+  padding: 8px 12px;
+  margin-top: 15px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  text-align: center;
+  cursor: pointer;
+}.modalContent button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.2s ease;
+}.modalContent button:first-of-type {
+  background-color: #4caf50;
+  color: white;
+}.modalContent button:first-of-type:hover {
+  background-color: #45a049;
+}.modalContent button:last-of-type {
+  background-color: #f44336;
+  color: white;
+}.modalContent button:last-of-type:hover {
+  background-color: #d32f2f;
+}

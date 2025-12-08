@@ -1,0 +1,273 @@
+.settingsPage{
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}.settingsHeader{
+  height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}.backButton{
+  background: transparent;
+  border: 0;
+  font-size: 22px;
+  cursor: pointer;
+}.headerTitle{
+  font-weight: 600;
+  font-size: 17px;
+}.settingsContent{
+  flex: 1;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.settingsSection {
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  padding: 10px;
+}
+
+.sectionTitle {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.listItem {
+  color: #071d0e;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: transparent;
+  border: 0;
+  width: 100%;
+  font-size: 16px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.listItem:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.hintText {
+  font-size: 13px;
+}
+
+/* ---------------- MODAL ---------------- */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6); /* 👈 մգացնող ֆոն */
+  backdrop-filter: blur(3px); /* 👈 փափուկ բլուր */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 16px;
+  animation: fadeIn 0.25s ease;
+}
+
+.modalBox {
+  width: 100%;
+  max-width: 420px;
+  background: #1e293b; /* 👈 մոդալի ֆոն (dark) */
+  color: #f1f5f9;
+  border-radius: 16px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+  transform: scale(0.97);
+  animation: scaleIn 0.25s ease forwards;
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  font-weight: 600;
+}
+
+.closeBtn {
+  background: transparent;
+  border: 0;
+  font-size: 20px;
+  cursor: pointer;
+  color: #f1f5f9;
+  transition: 0.2s;
+}
+
+.closeBtn:hover {
+  color: #38bdf8;
+}
+
+.modalBody {
+  padding: 16px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 12px;
+}
+
+.field input,
+textarea {
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  outline: none;
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.btnPrimary {
+  color: #071d0e;
+  background: #38bdf8;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.btnGhost {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.langOptions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.mutedText {
+  font-size: 14px;
+}
+
+.addressRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+.btnRemove {
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  color: #f87171;
+}
+
+/* ----------- ԱՆԻՄԱՑԻԱՆԵՐ ----------- */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+/* ---- Նոր դիզայն ---- */
+.modalBox {
+  background: linear-gradient(145deg, #0f172a, #1e293b);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  color: #f1f5f9;
+  border-radius: 18px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+}
+
+.modalHeader {
+  background: rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 14px 18px;
+  font-size: 16px;
+}
+
+.field select {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: #e2e8f0;
+  padding: 10px;
+  outline: none;
+}
+
+.phoneInput {
+  display: flex;
+  gap: 8px;
+}
+
+.countrySelect {
+  min-width: 100px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #f8fafc;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.phoneInput input {
+  flex: 1;
+}
+
+.codeField {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.btnGhost {
+  background: rgba(56, 189, 248, 0.1);
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  color: #38bdf8;
+  transition: 0.2s;
+}
+
+.btnGhost:hover {
+  background: rgba(56, 189, 248, 0.2);
+}
+
+.btnPrimary {
+  background: linear-gradient(90deg, #38bdf8, #0ea5e9);
+  color: #fff;
+  border: none;
+  transition: 0.2s;
+}
+
+.btnPrimary:hover {
+  opacity: 0.9;
+}
