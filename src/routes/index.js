@@ -5,7 +5,6 @@ const routes = {
     deposits: require('./deposits'),
     admin: require('./admin'),
     referrals: require('./referrals'),
-    bonus: require('./bonus'),
     code: require('./code'),
     wallet: require('./wallet'),
     stripe: require('./stripe'),

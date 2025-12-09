@@ -60,7 +60,6 @@ app.use('/api/v1/me', routes.me);
 app.use('/api/v1/deposits', routes.deposits);
 app.use('/api/v1/admin', routes.admin);
 app.use('/api/v1/referrals', routes.referrals);
-app.use('/api/v1/bonus', routes.bonus);
 app.use('/api/v1/code', routes.code);
 app.use('/api/v1/wallet', routes.wallet);
 app.use('/api/v1/stripe', routes.stripe);
@@ -76,7 +75,10 @@ app.use(globalErrorHandler);
 // Run Server
 Server(app);
 
-// Timecode scheduler removed
+try {
+    const scheduler = require('./src/jobs/timecodes.scheduler');
+    scheduler.start();
+} catch (e) {}
 
 try {
     const onchain = require('./src/jobs/onchain.monitor');
@@ -86,9 +88,4 @@ try {
 try {
     const wd = require('./src/jobs/withdraws.worker');
     wd.start();
-} catch (e) {}
-
-try {
-    const bonusScheduler = require('./src/jobs/bonus.scheduler');
-    bonusScheduler.start();
 } catch (e) {}

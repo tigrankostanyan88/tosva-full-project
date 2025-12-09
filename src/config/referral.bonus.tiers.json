@@ -1,0 +1,37 @@
+{
+  "minimum_deposit": 500,
+  "tiers": [
+    {
+      "min": 500,
+      "max": 1000,
+      "bonus_b_user": 40,
+      "bonus_x_user": 90
+    },
+    {
+      "min": 1000,
+      "max": 3000,
+      "bonus_b_user": 90,
+      "bonus_x_user": 180
+    },
+    {
+      "min": 3000,
+      "max": 5000,
+      "bonus_b_user": 290,
+      "bonus_x_user": 145
+    },
+    {
+      "min": 5000,
+      "max": 15000,
+      "bonus_b_user": 250,
+      "bonus_x_user": 500
+    },
+    {
+      "min": 15000,
+      "max": null,
+      "bonus_b_user": 570,
+      "bonus_x_user": 1500
+    }
+  ]
+}
+
+

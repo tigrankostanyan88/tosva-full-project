@@ -1,3 +1,5 @@
+const cfg = require('../config/referral.bonus.tiers.json');
+
 const createDepositSchema = {
     validate(body) {
         const errors = [];
@@ -18,16 +20,10 @@ const createDepositSchema = {
             value.amount = num;
         }
 
-        const cfgEnv = process.env.REFERRAL_BONUS_JSON;
-        let minimum = 500;
-        if (cfgEnv) {
-            try {
-                const parsed = JSON.parse(cfgEnv);
-                if (parsed && Number.isFinite(parsed.minimum_deposit)) minimum = Number(parsed.minimum_deposit);
-            } catch (e) {}
-        }
-        if (Number.isFinite(value.amount) && value.amount < minimum) {
-            errors.push({ message: `minimum deposit is ${minimum} USD` });
+        // Minimum deposit constraint (from config)
+        const minDep = Number(cfg.minimum_deposit || 500);
+        if (Number.isFinite(value.amount) && value.amount < minDep) {
+            errors.push({ message: `minimum deposit is ${minDep}` });
         }
 
         if (typeof value.currency !== 'string' || value.currency.length < 3 || value.currency.length > 10) {

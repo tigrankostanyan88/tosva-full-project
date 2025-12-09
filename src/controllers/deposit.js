@@ -55,6 +55,7 @@ exports.profile = catchAsync(async (req, res) => {
         referralService.getInvitesCount(req.user.id)
     ]);
 
+    const refRate = referralService.calcReferrerRate(0.20, refCount);
 
     const todayStart = new Date();
     todayStart.setHours(0, 0, 0, 0);
@@ -71,8 +72,10 @@ exports.profile = catchAsync(async (req, res) => {
         totalDeposited,
         balance,
         balancePlusDeposits,
+        invite_code: req.user.unique_tag,
         current_code: null,
         referral_count: refCount,
+        interest_rate_for_referrer: refRate,
         time: responseTime(req)
     });
 });

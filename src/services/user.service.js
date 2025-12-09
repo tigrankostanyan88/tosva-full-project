@@ -16,8 +16,9 @@ async function generateUniqueTag() {
 async function registerUser(payload) {
   const tag = await generateUniqueTag();
   const data = { ...payload, unique_tag: tag };
-  if (payload && payload.referral_code) {
-    const ref = await User.findOne({ where: { unique_tag: String(payload.referral_code) } });
+  const invCode = payload && (payload.invite_code || payload.referral_code);
+  if (invCode) {
+    const ref = await User.findOne({ where: { unique_tag: String(invCode) } });
     if (ref) data.referrer_id = ref.id;
   }
   const user = await User.create(data);

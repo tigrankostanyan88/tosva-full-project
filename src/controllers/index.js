@@ -4,10 +4,10 @@ const controllers = {
     File: require('./File'),
     error: require('./error'),
     deposit: require('./deposit'),
+    code: require('./code'),
     admin: require('./admin'),
     referral: require('./referral'),
     wallet: require('./wallet'),
-    bonus: require('./bonus'),
     stripe: require('./stripe'),
 }
 
