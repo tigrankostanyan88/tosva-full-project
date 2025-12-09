@@ -2,10 +2,14 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import "../Styles/LoginRegister.css";
+import { useNotify } from "./Notify";
 
 export default function Signup() {
+  axios.defaults.baseURL = process.env.REACT_APP_API_URL || `http://${window.location.hostname}:3400`;
+  axios.defaults.withCredentials = true;
   const navigate = useNavigate();
   const location = useLocation();
+  const notify = useNotify();
 
   // Read invite code from URL
   const queryParams = new URLSearchParams(location.search);
@@ -15,7 +19,7 @@ export default function Signup() {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [refCode, setRefCode] = useState(refFromUrl);
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState({ name: "", email: "", password: "" });
 
   useEffect(() => {
     if (refFromUrl) {
@@ -23,35 +27,56 @@ export default function Signup() {
     }
   }, [refFromUrl]);
 
+  // Auth guard handled globally in App.js to avoid flicker
+
   // ---------------- REGISTER ----------------
   const handleRegister = async () => {
     try {
-      setError("");
+      const nextErrors = { name: "", email: "", password: "" };
+      if (!name.trim()) nextErrors.name = "Name is required";
+      const emailTrim = email.trim();
+      if (!emailTrim) nextErrors.email = "Email is required";
+      else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailTrim)) nextErrors.email = "Email format is invalid";
+      if (!password) nextErrors.password = "Password is required";
+      else if (password.length < 6) nextErrors.password = "Password must be at least 6 characters";
+      setErrors(nextErrors);
+      if (nextErrors.name || nextErrors.email || nextErrors.password) {
+        notify && notify.error("Please fix the highlighted fields");
+        return;
+      }
 
       // FIRST: Register user
-      await axios.post("/api/v1/auth/register", {
-        name,
-        email,
-        password,
-        referrer: refCode,
-      });
+      await axios.post(
+        "/api/v1/auth/register",
+        {
+          name,
+          email,
+          password,
+          referrer: refCode,
+        },
+        { withCredentials: true }
+      );
 
-      // SECOND: Auto-login
-      const loginRes = await axios.post("/api/v1/auth/login", {
-        email,
-        password,
-      });
+      try {
+        await axios.get('/api/v1/users/profile', { withCredentials: true });
+        notify && notify.success("Registration successful");
+        window.dispatchEvent(new Event('auth:refresh'));
+        navigate("/");
+        return;
+      } catch {}
 
-      const { user, token } = loginRes.data;
-
-      localStorage.setItem("jwt", token);
-      localStorage.setItem("user", JSON.stringify(user));
-
-      // HARD REDIRECT (100% working)
-      window.location.href = "/";
+      await axios.post(
+        "/api/v1/auth/login",
+        { email, password },
+        { withCredentials: true }
+      );
+      notify && notify.success("Logged in");
+      window.dispatchEvent(new Event('auth:refresh'));
+      navigate("/");
 
     } catch (err) {
-      setError(err.response?.data?.message || "Server error");
+      const msg = err.response?.data?.message || "Server error";
+      notify && notify.error(msg);
     }
   };
 
@@ -65,7 +90,8 @@ export default function Signup() {
           placeholder="Name"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className="authInput"
+          className={`authInput${errors.name ? ' invalid' : ''}`}
+          aria-invalid={!!errors.name}
         />
 
         <input
@@ -73,7 +99,8 @@ export default function Signup() {
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="authInput"
+          className={`authInput${errors.email ? ' invalid' : ''}`}
+          aria-invalid={!!errors.email}
         />
 
         <input
@@ -81,7 +108,8 @@ export default function Signup() {
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="authInput"
+          className={`authInput${errors.password ? ' invalid' : ''}`}
+          aria-invalid={!!errors.password}
         />
 
         <input
@@ -95,8 +123,6 @@ export default function Signup() {
         <button onClick={handleRegister} className="authButton">
           Register
         </button>
-
-        {error && <p className="authError">{error}</p>}
 
         <p className="authSwitch">
           Already have an account?{" "}

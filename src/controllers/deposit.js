@@ -29,6 +29,25 @@ exports.create = catchAsync(async (req, res, next) => {
     });
 });
 
+// exports.list = catchAsync(async (req, res, next) => {
+//     const limit = parseInt(req.query.limit, 10) || 50;
+//     const offset = parseInt(req.query.offset, 10) || 0;
+
+//     if (limit < 1 || offset < 0) {
+//         return next(new AppError('Invalid pagination parameters', 400));
+//     }
+
+//     const deposits = await depositService.getUserDeposits(req.user.id, limit, offset);
+//     const totalDeposited = await depositService.getTotalDeposited(req.user.id);
+
+//     res.status(200).json({
+//         status: 'success',
+//         deposits,
+//         totalDeposited,
+//         time: responseTime(req)
+//     });
+// });
+
 exports.list = catchAsync(async (req, res, next) => {
     const limit = parseInt(req.query.limit, 10) || 50;
     const offset = parseInt(req.query.offset, 10) || 0;
@@ -37,10 +56,21 @@ exports.list = catchAsync(async (req, res, next) => {
         return next(new AppError('Invalid pagination parameters', 400));
     }
 
-    const deposits = await depositService.getUserDeposits(req.user.id, limit, offset);
+    if (req.user && req.user.role === 'admin') {
+        const deposits = await depositService.getAllDeposits(limit, offset);
+        const totals = await depositService.getTotalDepositedGlobal();
+        return res.status(200).json({
+            status: 'success',
+            deposits,
+            totals,
+            time: responseTime(req)
+        });
+    }
+
+    const deposits = await depositService.getUserDeposits(req.user.id, limit, offset); 
     const totalDeposited = await depositService.getTotalDeposited(req.user.id);
 
-    res.status(200).json({
+    return res.status(200).json({
         status: 'success',
         deposits,
         totalDeposited,
@@ -79,6 +109,78 @@ exports.profile = catchAsync(async (req, res) => {
         time: responseTime(req)
     });
 });
+
+exports.update = catchAsync(async (req, res, next) => {
+    const depositId = Number(req.params.id);
+    if (!Number.isInteger(depositId) || depositId <= 0) {
+        return next(new AppError("Invalid deposit id", 400));
+    }
+
+    if (!req.user || req.user.role !== 'admin') {
+        return next(new AppError('Access denied: admin only', 403));
+    }
+
+    const deposit = await DB.models.Deposit.findByPk(depositId);
+    if (!deposit) {
+        return next(new AppError("Deposit not found", 404));
+    }
+
+    const { amount, status } = req.body;
+
+    // -------------------- UPDATE AMOUNT --------------------
+    if (amount !== undefined) {
+        const num = Number(amount);
+        if (!Number.isFinite(num) || num <= 0) {
+            return next(new AppError('Invalid amount', 400));
+        }
+
+        if (deposit.status === "success") {
+            return next(new AppError("Cannot change amount after success", 400));
+        }
+
+        deposit.amount = num;
+    }
+
+    // -------------------- UPDATE STATUS --------------------
+    if (status !== undefined) {
+        const validStatuses = ["pending", "success", "failed"];
+        if (!validStatuses.includes(status)) {
+            return next(new AppError("Invalid status", 400));
+        }
+
+        // SUCCESS (special logic)
+        if (status === "success" && deposit.status !== "success") {
+            // save amount first if updated
+            if (amount !== undefined) await deposit.save();
+
+            const updated = await depositService.markSuccess(deposit.id);
+
+            return res.json({
+                status: "success",
+                deposit: updated,
+                time: responseTime(req),
+            });
+        }
+
+        // PENDING or FAILED
+        if (deposit.status === "success") {
+            return next(new AppError("Cannot modify successful deposit", 400));
+        }
+
+        deposit.status = status; // simple transition
+    }
+
+    // -------------------- FINAL SAVE (pending/failed/amount) --------------------
+    await deposit.save();
+
+    res.json({
+        status: "success",
+        deposit,
+        time: responseTime(req),
+    });
+});
+
+
 
 exports.qr = catchAsync(async (req, res, next) => {
     const id = Number(req.params.id);

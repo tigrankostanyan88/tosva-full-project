@@ -36,13 +36,6 @@ module.exports = (con, DataTypes) => {
         password: {
             type: DataTypes.TEXT,
             allowNull: false,
-            // set(value) {
-            //     // Storing passwords in plaintext in the database is terrible.
-            //     // Hashing the value with an appropriate cryptographic hash function is better.
-            //     bcrypt.hash(value, 12)
-            //         .then(hash => this.setDataValue('password', hash))
-            //         .catch(console.log);
-            // }
         },
         passwordChangedAt: DataTypes.DATE,
         passwordResetToken: DataTypes.STRING,
@@ -62,7 +55,7 @@ module.exports = (con, DataTypes) => {
             values: ['user', 'admin'],
             defaultValue: 'user'
         },
-        referrer_id: { type: DataTypes.INTEGER }
+        referrer_id: { type: DataTypes.STRING }
         ,failedLoginAttempts: { type: DataTypes.INTEGER, defaultValue: 0 }
         ,lockUntil: { type: DataTypes.DATE }
     }, {
@@ -120,7 +113,7 @@ module.exports = (con, DataTypes) => {
         if (this.passwordChangedAt) {
             const changedTimestamp = Math.floor(this.passwordChangedAt.getTime() / 1000);
 
-            // console.log(changedTimestamp, JWTTimestamp);
+            
             return JWTTimestamp < changedTimestamp;
         }
 
@@ -137,7 +130,7 @@ module.exports = (con, DataTypes) => {
 
 		this.passwordResetToken = crypto.createHash('sha256').update(resetToken).digest('hex');
 
-		console.log({ resetToken }, this.passwordResetToken);
+        	
 
 		this.passwordResetExpires = Date.now() + (10 * 60 * 1000); // 10 minutes
 	  

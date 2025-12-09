@@ -125,8 +125,6 @@ module.exports = class File {
         // extract the media type from the file mimetype / (image)
         const media = this.data.file.mimetype.split('/')[0];
 
-        console.log(media);
-
         // for(key of this.data.file) {
         //     var media = key.mimetype.split('/')[0];
         // }
@@ -154,15 +152,13 @@ module.exports = class File {
         allowed.messages = {};
 
         // Check if allowed media exists
-        console.log('Allowed media: ', allowed.media ? true : false);
         // Check if limits status is successful and names are allowed
-        console.log('Allowed names:', allowed.limits.status == 'success' ? true : false);
 
         // 1.1) Check media
         if (!allowed.media) {
             allowed.messages.media = `"The "${this.data.file.mimetype} media type is not allowed.`;
         } else {
-            console.log('Allowed size: ', allowed.media.size >= size ? true : false);
+            
 
             // 1.2) Check size
             if (allowed.media.size < size) {
@@ -183,7 +179,7 @@ module.exports = class File {
                 allowed.messages.name = `Name "${this.table.name_used}" for table "${this.table.table_name}" not found.`;
             }
         } else {
-            console.log('Allowed count:', allowed.limits.count > count ? true : false);
+            
 
             // 1.4) Check count
             if (allowed.limits.count <= count) {
@@ -192,7 +188,7 @@ module.exports = class File {
             // 1.5) Check type
             // file
             if (media != 'image') {
-                console.log('Allowed type (file): ', allowed.limits.types.includes(type) ? true : false);
+                
 
                 // Check if file type is allowed
                 if (!allowed.limits.types.includes(type)) {
@@ -206,7 +202,7 @@ module.exports = class File {
                 this.table.ext = this.data.file.metadata.format;
                 this.table.sizes = {};
 
-                console.log('Allowed type (image): ', allowed.limits.types.includes(this.table.ext) ? true : false);
+                
 
                 // check format
                 if (!allowed.limits.types.includes(this.table.ext)) {

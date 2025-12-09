@@ -20,11 +20,13 @@ const createSendToken = (user, statusCode, req, res, target = false) => {
 
     const cookieOptions = {
         expires: new Date(Date.now() + jwtExpire * 24 * 60 * 60 * 1000),
-        httpOnly: true
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/'
     }
 
-    if (process.env.NODE_ENV === 'production') 
-        cookieOptions.secure = true;
+    const isHttps = req.secure || req.headers['x-forwarded-proto'] === 'https';
+    if (isHttps) cookieOptions.secure = true;
     
     res.cookie('jwt', token, cookieOptions);
 
@@ -45,7 +47,7 @@ const createSendToken = (user, statusCode, req, res, target = false) => {
 };
 
 const logOutUser = (res) => {
-    res.cookie('auth', 'loggedout', {
+    res.cookie('jwt', 'loggedout', {
         expires: new Date(Date.now() + 2 * 1000),
         httpOnly: true
     });
@@ -94,7 +96,7 @@ module.exports = {
             });
     }),
     logout: async(req, res) => {
-        res.cookie('auth', 'loggedout', {
+        res.cookie('jwt', 'loggedout', {
             expires: new Date(Date.now() + 2 * 1000),
             httpOnly: true
         });

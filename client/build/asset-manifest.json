@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.css": "/static/css/main.f412fdef.css",
+    "main.js": "/static/js/main.b0dfbaf2.js",
+    "static/media/TosvaRemovebg.png": "/static/media/TosvaRemovebg.262c1d4ce701baeafcad.png",
+    "static/media/trade.png": "/static/media/trade.6bb67f17352e5d1f971a.png",
+    "static/media/support.png": "/static/media/support.a7faecbb5126154c28cd.png",
+    "static/media/assets.png": "/static/media/assets.33e7df0963941edbeb70.png",
+    "index.html": "/index.html",
+    "main.f412fdef.css.map": "/static/css/main.f412fdef.css.map",
+    "main.b0dfbaf2.js.map": "/static/js/main.b0dfbaf2.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.f412fdef.css",
+    "static/js/main.b0dfbaf2.js"
+  ]
+}

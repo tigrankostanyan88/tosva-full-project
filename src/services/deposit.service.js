@@ -73,4 +73,13 @@ module.exports = {
             offset
         });
     }
+    ,
+    async getAllDeposits(limit = 50, offset = 0) {
+        return await Deposit.findAll({
+            include: [{ model: DB.models.User, as: 'user', attributes: ['id', 'name', 'email'] }],
+            order: [['id', 'DESC']],
+            limit,
+            offset
+        });
+    }
 };

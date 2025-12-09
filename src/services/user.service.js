@@ -16,9 +16,15 @@ async function generateUniqueTag() {
 async function registerUser(payload) {
   const tag = await generateUniqueTag();
   const data = { ...payload, unique_tag: tag };
-  const invCode = payload && (payload.invite_code || payload.referral_code);
-  if (invCode) {
-    const ref = await User.findOne({ where: { unique_tag: String(invCode) } });
+  const candidate = payload && (payload.invite_code || payload.referral_code || payload.referrer_id);
+  if (candidate) {
+    const raw = String(candidate).trim();
+    let ref = null;
+    if (/^\d+$/.test(raw)) {
+      ref = await User.findByPk(Number(raw));
+    } else {
+      ref = await User.findOne({ where: { unique_tag: raw } });
+    }
     if (ref) data.referrer_id = ref.id;
   }
   const user = await User.create(data);

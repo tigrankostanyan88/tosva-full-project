@@ -48,4 +48,99 @@ footer{
         filter: brightness(0) saturate(100%) invert(83%) sepia(17%) saturate(636%) 
           hue-rotate(56deg) brightness(96%) contrast(91%);
 }
-  
+
+/* ---- Enhanced Footer Styles ---- */
+footer{
+  height: 72px;
+  background: linear-gradient(135deg, var(--card-bg), var(--card-bg-alt));
+  border-top: 1px solid var(--border-soft);
+  box-shadow: 0 -4px 12px rgba(0,0,0,0.22);
+  transform: translateZ(0);
+}
+/* Footer link layout for icons */
+.footerList a{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 44px;
+  border-radius: 5px;
+  transition: background 0.2s, transform 0.08s ease-in-out, box-shadow 0.2s;
+}
+.footerList a:hover{
+  background: rgba(255,255,255,0.06);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+}
+
+/* Font Awesome icons styling */
+.footerIcon{
+  font-size: 22px;
+  color: var(--text-muted);
+  transition: transform 0.08s ease-in-out, color 0.2s ease, opacity 0.2s;
+  opacity: 0.9;
+}
+.footerList a:hover .footerIcon{
+  transform: scale(1.08);
+  opacity: 1;
+  color: var(--green-accent-hover);
+}
+.activeLink .footerIcon{
+  color: var(--green-accent);
+  opacity: 1;
+}
+
+.footerList{
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1080px;
+  gap: 16px;
+  padding: 0 16px;
+}
+
+.footerList a{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 44px;
+  border-radius: 5px;
+  transition: background 0.2s, transform 0.08s ease-in-out, box-shadow 0.2s;
+}
+.footerList a:hover{
+  background: rgba(255,255,255,0.06);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+}
+
+.home, .trade, .assets, .settings{
+  width: 28px;
+  height: 28px;
+  transition: transform 0.08s ease-in-out, filter 0.2s, opacity 0.2s;
+  opacity: 0.82;
+  filter: grayscale(100%) contrast(92%);
+}
+.footerList a:hover .home,
+.footerList a:hover .trade,
+.footerList a:hover .assets,
+.footerList a:hover .settings{
+  transform: scale(1.08);
+  opacity: 1;
+  filter: grayscale(35%) contrast(100%);
+}
+
+.activeLink{
+  background: rgba(255,255,255,0.08);
+  box-shadow: inset 0 0 0 1px var(--border-soft);
+}
+.activeLink .home,
+.activeLink .trade,
+.activeLink .assets,
+.activeLink .settings{
+  filter: brightness(0) saturate(100%) invert(83%) sepia(17%) saturate(636%) hue-rotate(56deg) brightness(96%) contrast(91%);
+  opacity: 1;
+}
+
+/* Settings icon image (reuse existing support icon) */
+.settings{
+  background-image: url("/public/Icons/support.png");
+}
+/* Override removed: use relative paths to public assets above */

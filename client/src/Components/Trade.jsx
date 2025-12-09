@@ -116,90 +116,30 @@ export default function Trade() {
   // Admin panel
   if (user?.role === "admin") {
     return (
-      <div className="adminPage" style={{ padding: "20px" }}>
-        <h1 style={{ color: "white" }}>Admin Control Panel</h1>
-
-        <div style={{ marginTop: "20px", color: "white" }}>
-          <h3>Current Code:</h3>
-          <div
-            style={{
-              background: "#222",
-              padding: "10px 15px",
-              borderRadius: "10px",
-              display: "inline-block",
-              fontSize: "20px",
-              marginTop: "5px",
-            }}
-          >
-            {currentCode || "No active code"}
-          </div>
+      <div className="adminPage">
+        <h1 className="adminTitle">Admin Control Panel</h1>
+        <div className="adminBlock">
+          <h3 className="adminSub">Current Code</h3>
+          <div className="codeBox">{currentCode || "No active code"}</div>
+          <button onClick={loadCurrentCode} className="btn refreshBtn">Refresh Code</button>
         </div>
-
-        <button
-          onClick={loadCurrentCode}
-          style={{
-            marginTop: "15px",
-            padding: "10px 20px",
-            borderRadius: "10px",
-            background: "#444",
-            color: "white",
-            border: "none",
-            cursor: "pointer",
-          }}
-        >
-          Refresh Code
-        </button>
-
-        <div style={{ marginTop: "40px", color: "white" }}>
-          <h3>Set Slots (comma separated)</h3>
+        <div className="adminBlock">
+          <h3 className="adminSub">Set Slots (comma separated)</h3>
           <input
-            style={{
-              width: "300px",
-              padding: "10px",
-              borderRadius: "8px",
-              border: "1px solid #666",
-              background: "#111",
-              color: "white",
-            }}
+            className="slotInput"
             placeholder="17:30, 13:00, 15:00"
             value={slotsInput}
             onChange={(e) => setSlotsInput(e.target.value)}
           />
+          <button onClick={submitSlots} className="btn submitBtn">Submit Slots</button>
+          {adminMessage && <div className="adminMsg">{adminMessage}</div>}
         </div>
-
-        <button
-          onClick={submitSlots}
-          style={{
-            marginTop: "15px",
-            padding: "10px 20px",
-            borderRadius: "10px",
-            background: "#1e90ff",
-            color: "white",
-            border: "none",
-            cursor: "pointer",
-          }}
-        >
-          Submit Slots
-        </button>
-
-        {adminMessage && (
-          <div
-            style={{
-              marginTop: "20px",
-              color: "lightgreen",
-              fontSize: "18px",
-            }}
-          >
-            {adminMessage}
-          </div>
-        )}
-
         {userW.length > 0 && (
-          <div style={{ marginTop: "20px", color: "white" }}>
-            <h4>Current Slots:</h4>
-            <ul>
+          <div className="adminBlock">
+            <h4 className="adminSub">Current Slots</h4>
+            <ul className="slotsList">
               {userW.map((slot, idx) => (
-                <li key={idx}>{slot}</li>
+                <li key={idx} className="slotItem">{slot}</li>
               ))}
             </ul>
           </div>

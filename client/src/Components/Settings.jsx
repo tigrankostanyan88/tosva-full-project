@@ -9,7 +9,7 @@ export default function Settings() {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
 
-  const [language, setLanguage] = useState(localStorage.getItem("appLanguage") || "en");
+  const [language, setLanguage] = useState(i18n.language || localStorage.getItem("appLanguage") || "en");
   const [modal, setModal] = useState(null);
   const [form, setForm] = useState({});
 
@@ -32,12 +32,10 @@ export default function Settings() {
   };
 
   useEffect(() => {
-    const currentLang = i18n.language;
-    if (language && language !== currentLang) {
-      i18n.changeLanguage(language);
+    if (language) {
       localStorage.setItem("appLanguage", language);
     }
-  }, [language, i18n]);
+  }, [language]);
 
   const openModal = (title, content) => setModal({ title, content });
   const closeModal = () => setModal(null);
@@ -58,7 +56,6 @@ export default function Settings() {
             value={form.amount}
             onChange={(e) => {
   const value = e.target.value;
-  console.log("Amount changed:", value);
   setForm({ ...form, amount: value });
 }}
             placeholder={t("EnterAmount")}
@@ -72,7 +69,6 @@ export default function Settings() {
             value={form.toAddress}
             onChange={(e) => {
   const valuel = e.target.value;
-  console.log("Amount changed:", valuel); 
   setForm({ ...form, amount: valuel });
             }}
             placeholder={t("EnterAddress")}
@@ -94,11 +90,9 @@ export default function Settings() {
                   { amount: amountNum, to_address: form.toAddress },
                   { headers }
                 );
-                console.log("Withdraw response:", res.data);
                 alert(t("WithdrawalSubmitted"));
                 closeModal();
               } catch (err) {
-                console.error("Withdraw error:", err);
                 alert(t("WithdrawalFailed"));
               }
             }}
@@ -116,7 +110,7 @@ export default function Settings() {
       t("LanguageSwitch"),
       <div className="modalContent">
         <div className="langOptions">
-          {[
+            {[
             { code: "en", label: "English" },
             { code: "ru", label: "Русский" },
             { code: "fr", label: "Français" },
@@ -126,7 +120,9 @@ export default function Settings() {
               key={lang.code}
               className="btnGhost"
               onClick={() => {
+                i18n.changeLanguage(lang.code);
                 setLanguage(lang.code);
+                localStorage.setItem("appLanguage", lang.code);
                 closeModal(); 
               }}
             >

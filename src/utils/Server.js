@@ -2,7 +2,7 @@ module.exports = (app) => {
     const DB = require('../models');
 
     const startServer = (port) => {
-        const server = app.listen(port, () => console.log(`Server running on port ${port}...`));
+        const server = app.listen(port);
 
         server.on('error', (err) => {
             if (err && err.code === 'EADDRINUSE') {
@@ -14,8 +14,6 @@ module.exports = (app) => {
         });
 
         process.on('unhandledRejection', err => {
-            console.log('UNHANDLED REJECTION! Shutting down...');
-            console.log(err.name, err.message);
             server.close(() => { process.exit(1); });
         });
     };
@@ -52,7 +50,7 @@ module.exports = (app) => {
             const initialPort = 3400;
             startServer(initialPort);
         })
-        .catch(err => console.log(err));
+        .catch(() => {});
 
     return DB;
 };

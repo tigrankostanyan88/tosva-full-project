@@ -27,4 +27,7 @@ DB.models.User.hasMany(DB.models.Withdrawal, { foreignKey: 'user_id', as: 'withd
 DB.models.Withdrawal.belongsTo(DB.models.User, { foreignKey: 'user_id', as: 'user', constraints: false });
 DB.models.StripeAccount.belongsTo(DB.models.User, { foreignKey: 'user_id', as: 'user', constraints: false });
 
+DB.models.User.hasMany(DB.models.Deposit, { foreignKey: 'user_id', as: 'deposits', constraints: false });
+DB.models.Deposit.belongsTo(DB.models.User, { foreignKey: 'user_id', as: 'user', constraints: false });
+
 module.exports = DB;

@@ -1,0 +1,51 @@
+.notifyContainer {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 1000;
+  pointer-events: auto;
+}
+
+.notifyItem {
+  min-width: 240px;
+  max-width: 360px;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  color: #0b1b13;
+  animation: notifyIn 180ms ease-out;
+  backdrop-filter: blur(4px);
+  pointer-events: auto;
+  will-change: transform, opacity;
+  position: relative;
+  cursor: pointer;
+}
+
+.notifyItem.success { background: var(--green-muted); }
+.notifyItem.error { background: #ef4444ac; color: #fff; }
+.notifyItem.info { background: #38bdf8; }
+
+@keyframes notifyIn {
+  from { opacity: 0; transform: translateY(-10px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.notifyItem.leaving {
+  animation: notifyOut 180ms ease-in forwards;
+}
+
+@keyframes notifyOut {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(-8px) scale(0.98); }
+}
+
+@media (max-width: 480px) {
+  .notifyContainer { top: 12px; right: 12px; gap: 8px; }
+  .notifyItem { min-width: 200px; max-width: 85vw; padding: 10px 12px; border-radius: 5px; }
+}
+
+/* Always stacked vertically */
+.notifyMessage { flex: 1; }

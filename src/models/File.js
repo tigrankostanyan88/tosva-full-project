@@ -76,7 +76,7 @@ module.exports = (con, DataTypes) => {
                 let pathStart = `./public/files`,
                     pathFile = `${file.name}.${file.ext}`;
 
-                console.log(file);
+                
 
                 // 1) Check media type
                 // image

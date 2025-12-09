@@ -14,14 +14,11 @@ module.exports = {
     getUsers: catchAsync(async (req, res) => {
         // 3) Update user
         const user = await User.findAll({
-            include: [
-                { model: Like, as: 'likes'}
-            ],
             raw: true,
             order: [
                 ["id", "ASC"]
             ],
-            attributes: ['name', 'email', 'provider'], // Specify the columns you want to retrieve
+            attributes: ['name', 'email', 'provider', 'referrer_id', 'failedLoginAttempts', 'lockUntil', 'provider', 'unique_tag', 'id'], // Specify the columns you want to retrieve
         });
         res.status(200).json({
             user,
