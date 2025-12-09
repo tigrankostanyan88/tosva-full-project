@@ -155,7 +155,7 @@ export default function AdminDeposits() {
   return (
     <div style={{ maxWidth: 1080, margin: '0 auto', padding: 16 }}>
       <AdminNav />
-      <h1 style={{ marginBottom: 12 }}>Admin — Deposits</h1>
+      <h2 style={{ marginBottom: 50 }}>Admin — Deposits</h2>
 
       {totals && (
         <div style={{ marginBottom: 12, fontSize: 14, opacity: 0.85 }}>
@@ -186,44 +186,61 @@ export default function AdminDeposits() {
             </tr>
           </thead>
           <tbody>
-            {items.map((d) => (
-              <tr key={d.id} style={{ borderTop: '1px solid rgba(255,255,255,0.12)' }}>
-                <td style={{ padding: 10 }}>{d.id}</td>
-                <td style={{ padding: 10 }}>{formatUser(d)}</td>
-                <td style={{ padding: 10 }}>{Number(d.amount).toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
-                <td style={{ padding: 10 }}>{d.currency}</td>
-                <td style={{ padding: 10 }}>{d.status}</td>
-                <td style={{ padding: 10 }}>{d.provider}</td>
-                <td style={{ padding: 10 }}>{d.chain}</td>
-                <td style={{ padding: 10 }}>{d.reference_code}</td>
-                <td style={{ padding: 10 }}>{formatDate(d.date)}</td>
-                <td style={{ padding: 10 }}>
-                  <button onClick={() => startEdit(d)} className="btnPrimary">Edit</button>
-                </td>
-              </tr>
-            ))}
+            {items.map((d) => {
+              const isPending = String(d.status).toLowerCase() === 'pending';
+              const isSuccess = String(d.status).toLowerCase() === 'success';
+              const isFailed = String(d.status).toLowerCase() === 'failed';
+              const rowBg = isPending ? 'rgba(255,165,0,0.12)' : 'transparent';
+              const chipStyle = isPending
+                ? { background: 'rgba(255,165,0,0.15)', color: '#ff9e2f', border: '1px solid rgba(255,165,0,0.45)' }
+                : isSuccess
+                  ? { background: 'rgba(62,207,142,0.18)', color: '#3ecf8e', border: '1px solid rgba(62,207,142,0.45)' }
+                  : isFailed
+                    ? { background: 'rgba(255,114,114,0.15)', color: '#ff7272', border: '1px solid rgba(255,114,114,0.45)' }
+                    : { background: 'rgba(255,255,255,0.08)', color: '#ddd', border: '1px solid rgba(255,255,255,0.18)' };
+              return (
+                <tr key={d.id} style={{ borderTop: '1px solid rgba(255,255,255,0.12)', background: rowBg }}>
+                  <td style={{ padding: 10 }}>{d.id}</td>
+                  <td style={{ padding: 10 }}>{formatUser(d)}</td>
+                  <td style={{ padding: 10 }}>{Number(d.amount).toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
+                  <td style={{ padding: 10 }}>{d.currency}</td>
+                  <td style={{ padding: 10 }}>
+                    <span style={{ display: 'inline-block', fontSize: 12, padding: '2px 8px', borderRadius: 999, ...chipStyle }}>
+                      {d.status}
+                    </span>
+                  </td>
+                  <td style={{ padding: 10 }}>{d.provider}</td>
+                  <td style={{ padding: 10 }}>{d.chain}</td>
+                  <td style={{ padding: 10 }}>{d.reference_code}</td>
+                  <td style={{ padding: 10 }}>{formatDate(d.date)}</td>
+                  <td style={{ padding: 10 }}>
+                    <button onClick={() => startEdit(d)} className="btnPrimary">Edit</button>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
 
       {users && users.length > 0 && (
-        <div style={{ marginTop: 24 }}>
+        <div style={{ marginTop: 100, marginBottom: 100 }}>
           <h2 style={{ marginBottom: 12 }}>Users</h2>
-          <div style={{ display: 'flex', gap: 12, alignItems: 'center', marginBottom: 12 }}>
+          <div style={{ display: 'flex', gap: 15, alignItems: 'center', marginBottom: 20 }}>
             <input
               value={usersQuery}
               onChange={(e) => setUsersQuery(e.target.value)}
               placeholder="Search by name or email"
               className="inputBase"
-              style={{ flex: 1 }}
+              style={{ flex: 1, borderRadius: 5 }}
             />
             <div className="mutedText" style={{ fontSize: 13 }}>Found {filteredUsers.length}</div>
           </div>
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
-              gap: 12
+              gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
+              gap: 5
             }}
           >
             {filteredUsers.map((u, idx) => {
@@ -237,14 +254,14 @@ export default function AdminDeposits() {
                   style={{
                     background: 'rgba(35,45,60,0.65)',
                     border: '1px solid rgba(255,255,255,0.12)',
-                    borderRadius: 10,
+                    borderRadius: 6,
                     padding: 12
                   }}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                     <div
                       style={{
-                        width: 38,
+                        width: 40,
                         height: 38,
                         borderRadius: '50%',
                         background: 'linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.04))',

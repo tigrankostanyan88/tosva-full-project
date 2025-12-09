@@ -1,19 +1,26 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import axios from "axios";
 import "../Styles/Trade.css";
+import { useNotify } from "./Notify";
 
 export default function Trade() {
+  const notify = useNotify();
   const [user, setUser] = useState(null);
   const [loadingUser, setLoadingUser] = useState(true);
   const [userW, setUserW] = useState([]);
+  const [serverSlots, setServerSlots] = useState([]);
 
   const [currentCode, setCurrentCode] = useState(null);
-  const [slotsInput, setSlotsInput] = useState("");
-  const [adminMessage, setAdminMessage] = useState("");
+  const [slot1, setSlot1] = useState("");
+  const [slot2, setSlot2] = useState("");
+  const [slot3, setSlot3] = useState("");
 
   const [tradeCode, setTradeCode] = useState("");
-  const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const saveTimer = useRef(null);
+  const [tzOffset, setTzOffset] = useState(null);
+  const lastSavedRef = useRef(null);
+  const suppressAutoSaveRef = useRef(false);
 
   // Fetch user profile
   useEffect(() => {
@@ -23,6 +30,7 @@ export default function Trade() {
         setUser(resp.data.user);
       } catch (err) {
         console.error("USER LOAD ERROR:", err);
+        if (notify) notify.error("Failed to load profile");
       } finally {
         setLoadingUser(false);
       }
@@ -30,82 +38,220 @@ export default function Trade() {
     loadUser();
   }, []);
 
-  // Fetch slots only for admin
   useEffect(() => {
     if (user?.role !== "admin") return;
-
-    async function loadSlots() {
-      try {
-        const resp = await axios.get("/api/v1/admin/code/slots", {
-          headers: {
-            Authorization: `Bearer ${user.token}`,
-          },
-        });
-
-        const slotsArray = Array.isArray(resp.data.slots)
-          ? resp.data.slots.map((slot) =>
-              typeof slot === "object" && slot.code ? slot.code : slot
-            )
-          : [];
-
-        setUserW(slotsArray);
-      } catch (err) {
-        console.error("SLOTS LOAD ERROR:", err);
-      }
-    }
-
-    loadSlots();
+    loadSlots(true);
   }, [user]);
 
-  // Load current code for admin
-  async function loadCurrentCode() {
+  useEffect(() => {
+    if (user?.role !== "admin") return;
+    loadTimezone(true);
+  }, [user]);
+
+  async function loadSlots(silent = false) {
     try {
-      const resp = await axios.get("/api/v1/admin/code/current", {
-        headers: {
-          Authorization: `Bearer ${user?.token}`,
-        },
-      });
-      setCurrentCode(
-        resp.data.current_code?.code || resp.data.current_code || null
-      );
+      suppressAutoSaveRef.current = true;
+      const resp = await axios.get("/api/v1/admin/code/slots");
+      const slotsArray = Array.isArray(resp.data.slots)
+        ? resp.data.slots.map((slot) =>
+            typeof slot === "object" && slot.code ? slot.code : slot
+          )
+        : [];
+      setServerSlots(slotsArray);
+      const v = Number(tzOffset);
+      const toLocal = (hhmm, offset) => {
+        const hh = Number(hhmm.slice(0,2));
+        const mm = Number(hhmm.slice(3,5));
+        const total = hh * 60 + mm;
+        let loc = (total + offset) % 1440;
+        if (loc < 0) loc += 1440;
+        const lh = String(Math.floor(loc / 60)).padStart(2, '0');
+        const lm = String(loc % 60).padStart(2, '0');
+        return `${lh}:${lm}`;
+      };
+      const display = Number.isFinite(v) ? slotsArray.map(s => toLocal(s, Math.trunc(v))) : slotsArray;
+      setUserW(display);
+      setSlot1(display[0] || "");
+      setSlot2(display[1] || "");
+      setSlot3(display[2] || "");
+      const sig = [...slotsArray].map((s) => String(s)).sort().join("|");
+      lastSavedRef.current = sig;
+      setTimeout(() => { suppressAutoSaveRef.current = false; }, 800);
+      if (!silent && notify) notify.info("Slots refreshed");
+    } catch (err) {
+      console.error("SLOTS LOAD ERROR:", err);
+      if (!silent && notify) notify.error("Failed to load slots");
+    }
+  }
+
+  // Load current code for admin
+  async function loadCurrentCode(silent = false) {
+    try {
+      const resp = await axios.get("/api/v1/admin/code/current");
+      const data = resp.data.current_code;
+      const next = (data && data.code) ? data.code : (data || null);
+      setCurrentCode(next);
     } catch (err) {
       console.error("ADMIN CURRENT CODE ERROR:", err);
+      if (!silent && notify) notify.error("Failed to load current code");
     }
+  }
+
+  async function copyCode() {
+    if (!currentCode) {
+      if (notify) notify.info("No code yet");
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(String(currentCode));
+      if (notify) notify.success("Code copied");
+    } catch (e) {
+      if (notify) notify.error("Copy failed");
+    }
+  }
+
+  async function loadTimezone(silent = false) {
+    try {
+      const resp = await axios.get("/api/v1/admin/code/timezone");
+      const v = Number(resp.data?.timezone_offset_minutes);
+      if (Number.isFinite(v)) setTzOffset(Math.trunc(v));
+      if (!silent && notify) notify.info("Timezone loaded");
+    } catch (err) {
+      if (!silent && notify) notify.error("Failed to load timezone");
+    }
+  }
+
+  async function saveTimezone() {
+    try {
+      const v = Number(tzOffset);
+      if (!Number.isFinite(v)) {
+        if (notify) notify.error("Enter valid minutes");
+        return;
+      }
+      const resp = await axios.post("/api/v1/admin/code/timezone", { timezone_offset_minutes: Math.trunc(v) });
+      const ok = resp.data?.status === "success";
+      if (notify) {
+        if (ok) notify.success("Timezone updated");
+        else notify.error("Failed to update timezone");
+      }
+    } catch (err) {
+      if (notify) notify.error("Failed to update timezone");
+    }
+  }
+
+  const tzOptions = useMemo(() => {
+    const fmt = (min) => {
+      const sign = min >= 0 ? "+" : "-";
+      const abs = Math.abs(min);
+      const h = String(Math.floor(abs / 60));
+      const m = String(abs % 60).padStart(2, "0");
+      return `UTC${sign}${h}${m !== "00" ? ":"+m : ""}`;
+    };
+    const out = [];
+    for (let m = -720; m <= 840; m += 15) {
+      out.push({ value: m, label: fmt(m) });
+    }
+    return out;
+  }, []);
+
+
+  function validateHHMM(val) {
+    return /^\d{2}:\d{2}$/.test(val) && Number(val.slice(0,2)) < 24 && Number(val.slice(3,5)) < 60;
   }
 
   async function submitSlots() {
     try {
-      const slotsArray = slotsInput
-        .split(",")
-        .map((s) => s.trim())
-        .filter((s) => s.length > 0);
-
-      const payload = {
-        slots: slotsArray,
-        tzOffsetMinutes: "240", // UTC+4
+      const toHHMM = (s) => {
+        const parts = String(s || '').trim().split(':');
+        const hh = String(parts[0] || '').padStart(2, '0');
+        const mm = String(parts[1] || '').padStart(2, '0');
+        return `${hh}:${mm}`;
       };
+      const toMinutes = (hhmm) => Number(hhmm.slice(0,2)) * 60 + Number(hhmm.slice(3,5));
+      const slotsArray = [slot1, slot2, slot3].map(toHHMM);
+      const allPresent = slotsArray.every((s) => !!s);
+      const allValid = slotsArray.every((s) => validateHHMM(s));
+      if (!allPresent || !allValid) {
+        if (notify) notify.error("Please select three valid times (HH:MM)");
+        return;
+      }
 
-      const resp = await axios.post("/api/v1/admin/code/slots", payload, {
-        headers: {
-          Authorization: `Bearer ${user?.token}`,
-        },
-      });
+      const uniq = Array.from(new Set(slotsArray));
+      if (uniq.length !== 3) {
+        if (notify) notify.error("Slots must be different");
+        return;
+      }
+      const sorted = uniq.sort((a, b) => toMinutes(a) - toMinutes(b));
+      const tzVal = Number(tzOffset);
+      const payload = Number.isFinite(tzVal)
+        ? { slots: sorted, tzOffsetMinutes: Math.trunc(tzVal) }
+        : { slots: sorted };
+
+      const resp = await axios.post("/api/v1/admin/code/slots", payload);
 
       if (resp.data.status === "success") {
-        setAdminMessage("Slots updated successfully");
-        setUserW(slotsArray);
+        setUserW(sorted);
+        if (notify) notify.success("Slots updated successfully");
+        const sig = [...sorted].map((s) => String(s)).sort().join("|");
+        lastSavedRef.current = sig;
+        suppressAutoSaveRef.current = true;
+        setTimeout(() => { suppressAutoSaveRef.current = false; }, 800);
       } else {
-        setAdminMessage("Failed to update slots");
+        const msg = resp.data?.message || "Failed to update slots";
+        if (notify) notify.error(msg);
       }
     } catch (err) {
       console.error("ADMIN SLOT ERROR:", err);
-      setAdminMessage("Error updating slots");
+      const msg = err.response?.data?.message || err.message || "Error updating slots";
+      if (notify) notify.error(msg);
     }
   }
 
+  // Auto-save slots with debounce when all three are valid
+  useEffect(() => {
+    if (user?.role !== "admin") return;
+    const slotsArray = [slot1, slot2, slot3];
+    const allPresent = slotsArray.every((s) => !!s);
+    const allValid = slotsArray.every((s) => validateHHMM(s));
+    if (!allPresent || !allValid) return;
+    if (suppressAutoSaveRef.current) return;
+    const sig = [...slotsArray].map((s) => String(s)).sort().join("|");
+    if (lastSavedRef.current === sig) return;
+    if (saveTimer.current) clearTimeout(saveTimer.current);
+    saveTimer.current = setTimeout(() => {
+      submitSlots();
+    }, 600);
+    return () => {
+      if (saveTimer.current) clearTimeout(saveTimer.current);
+    };
+  }, [slot1, slot2, slot3, user]);
+
+  useEffect(() => {
+    if (user?.role !== "admin") return;
+    if (!serverSlots || serverSlots.length === 0) return;
+    const v = Number(tzOffset);
+    suppressAutoSaveRef.current = true;
+    const toLocal = (hhmm, offset) => {
+      const hh = Number(hhmm.slice(0,2));
+      const mm = Number(hhmm.slice(3,5));
+      const total = hh * 60 + mm;
+      let loc = (total + offset) % 1440;
+      if (loc < 0) loc += 1440;
+      const lh = String(Math.floor(loc / 60)).padStart(2, '0');
+      const lm = String(loc % 60).padStart(2, '0');
+      return `${lh}:${lm}`;
+    };
+    const display = Number.isFinite(v) ? serverSlots.map(s => toLocal(s, Math.trunc(v))) : serverSlots;
+    setUserW(display);
+    setSlot1(display[0] || "");
+    setSlot2(display[1] || "");
+    setSlot3(display[2] || "");
+    setTimeout(() => { suppressAutoSaveRef.current = false; }, 800);
+  }, [tzOffset]);
+
   useEffect(() => {
     if (user?.role === "admin") {
-      loadCurrentCode();
+      loadCurrentCode(true);
     }
   }, [user]);
 
@@ -120,19 +266,69 @@ export default function Trade() {
         <h1 className="adminTitle">Admin Control Panel</h1>
         <div className="adminBlock">
           <h3 className="adminSub">Current Code</h3>
-          <div className="codeBox">{currentCode || "No active code"}</div>
-          <button onClick={loadCurrentCode} className="btn refreshBtn">Refresh Code</button>
+          <div className="codeRow">
+            <div className={"codeBox" + (!currentCode ? " codeEmpty" : "")}>{currentCode || "No active code"}</div>
+            <div className="codeActions">
+              <button onClick={() => loadCurrentCode(false)} className="btn refreshBtn" aria-label="Refresh code">
+                <i className="fa-solid fa-arrows-rotate" aria-hidden="true"></i>
+              </button>
+              <button onClick={copyCode} className="btn refreshBtn" disabled={!currentCode} aria-label="Copy current code">
+                <svg className="btnIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+                Copy Code
+              </button>
+            </div>
+          </div>
         </div>
         <div className="adminBlock">
-          <h3 className="adminSub">Set Slots (comma separated)</h3>
-          <input
-            className="slotInput"
-            placeholder="17:30, 13:00, 15:00"
-            value={slotsInput}
-            onChange={(e) => setSlotsInput(e.target.value)}
-          />
+          <h3 className="adminSub">Set Daily Slots</h3>
+          <div className="timeRow">
+            <div className="timeCol">
+              <label className="label">Slot 1</label>
+              <input type="time" className="timeInput" value={slot1} onChange={(e) => setSlot1(e.target.value)} step="60" />
+            </div>
+            <div className="timeCol">
+              <label className="label">Slot 2</label>
+              <input type="time" className="timeInput" value={slot2} onChange={(e) => setSlot2(e.target.value)} step="60" />
+            </div>
+            <div className="timeCol">
+              <label className="label">Slot 3</label>
+              <input type="time" className="timeInput" value={slot3} onChange={(e) => setSlot3(e.target.value)} step="60" />
+            </div>
+          </div>
+          <div className="tzRow">
+            <span className="tzBadge">Timezone: {(() => {
+              const v = Number(tzOffset);
+              if (!Number.isFinite(v)) return "unknown";
+              const sign = v >= 0 ? "+" : "-";
+              const ah = String(Math.floor(Math.abs(v) / 60)).padStart(1, "");
+              const am = String(Math.abs(v) % 60).padStart(2, "0");
+              return `UTC${sign}${ah}${am !== "00" ? ":"+am : ""}`;
+            })()}</span>
+          </div>
+          <div className="timeRow">
+            <div className="timeCol">
+              <label className="label">Timezone</label>
+              <select className="selectInput" value={tzOffset ?? ""} onChange={(e) => setTzOffset(Number(e.target.value))}>
+                <option value="" disabled>Select timezone</option>
+                {tzOptions.map((opt) => (
+                  <option key={opt.value} value={opt.value}>{opt.label}</option>
+                ))}
+              </select>
+            </div>
+            <div className="timeCol">
+              <label className="label">Actions</label>
+              <div className="codeActions">
+                <button onClick={() => loadTimezone(false)} className="btn refreshBtn" aria-label="Load timezone">
+                  <i className="fa-solid fa-arrows-rotate" aria-hidden="true"></i>
+                </button>
+                <button onClick={saveTimezone} className="btn submitBtn">Save Timezone</button>
+              </div>
+            </div>
+          </div>
           <button onClick={submitSlots} className="btn submitBtn">Submit Slots</button>
-          {adminMessage && <div className="adminMsg">{adminMessage}</div>}
         </div>
         {userW.length > 0 && (
           <div className="adminBlock">
@@ -151,23 +347,24 @@ export default function Trade() {
   // User panel
   async function handleSubmit() {
   if (!tradeCode.trim()) {
-    setMessage("Please enter the code");
+    if (notify) notify.error("Please enter the code");
     return;
   }
 
   setLoading(true);
-  setMessage("");
+  if (notify) notify.info("Submitting code...");
 
   try {
     const { data } = await axios.post("/api/v1/code/submit", {
       code: tradeCode.trim(),
     });
 
-    const msg =
-      data?.message ||
-      (data?.success ? "Transaction successful" : "Invalid code");
-
-    setMessage(msg);
+    const msg = data?.message || (data?.success ? "Transaction successful" : "Invalid code");
+    if (notify) {
+      if (data?.success) notify.success(msg);
+      else notify.error(msg);
+    }
+    if (data?.success) setTradeCode("");
 
   } catch (err) {
     console.error("ERROR", err);
@@ -177,7 +374,7 @@ export default function Trade() {
       err.response?.data?.error ||
       "Invalid code";
 
-    setMessage(errMsg);
+    if (notify) notify.error(errMsg);
 
   } finally {
     setLoading(false);
@@ -199,7 +396,6 @@ export default function Trade() {
             value={tradeCode}
             onChange={(e) => {
               setTradeCode(e.target.value.toUpperCase());
-              setMessage("");
             }}
             onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
           />
@@ -233,7 +429,7 @@ export default function Trade() {
           </button>
         </div>
 
-        {message && <div className="feedbackMessage">{message}</div>}
+        {/* notifications are shown via NotifyProvider; inline message removed */}
       </main>
     </div>
   );

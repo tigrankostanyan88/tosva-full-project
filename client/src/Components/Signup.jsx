@@ -5,7 +5,6 @@ import "../Styles/LoginRegister.css";
 import { useNotify } from "./Notify";
 
 export default function Signup() {
-  axios.defaults.baseURL = process.env.REACT_APP_API_URL || `http://${window.location.hostname}:3400`;
   axios.defaults.withCredentials = true;
   const navigate = useNavigate();
   const location = useLocation();
@@ -26,8 +25,6 @@ export default function Signup() {
       setRefCode(refFromUrl);
     }
   }, [refFromUrl]);
-
-  // Auth guard handled globally in App.js to avoid flicker
 
   // ---------------- REGISTER ----------------
   const handleRegister = async () => {
@@ -52,7 +49,7 @@ export default function Signup() {
           name,
           email,
           password,
-          referrer: refCode,
+          invite_code: refCode,
         },
         { withCredentials: true }
       );
@@ -116,7 +113,7 @@ export default function Signup() {
           type="text"
           placeholder="Invite Code"
           value={refCode}
-          readOnly
+          onChange={(e) => setRefCode(e.target.value)}
           className="authInput"
         />
 

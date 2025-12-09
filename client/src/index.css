@@ -21,7 +21,7 @@ html, body, #root{
     background:rgba(69, 69, 69 , 1); 
 }::-webkit-scrollbar-thumb { 
     background: #CBCBCB;
-    border-radius: 9em; 
+    border-radius: 5px; 
     box-shadow: inset 1px 1px 10px rgb(255, 255, 255);
 }::-webkit-scrollbar-thumb:hover { 
     background: rgb(90, 90, 90);

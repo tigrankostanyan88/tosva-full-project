@@ -64,7 +64,7 @@ footer{
   justify-content: center;
   width: 56px;
   height: 44px;
-  border-radius: 5px;
+  border-radius: var(--radius);
   transition: background 0.2s, transform 0.08s ease-in-out, box-shadow 0.2s;
 }
 .footerList a:hover{
@@ -103,7 +103,7 @@ footer{
   justify-content: center;
   width: 56px;
   height: 44px;
-  border-radius: 5px;
+  border-radius: var(--radius);
   transition: background 0.2s, transform 0.08s ease-in-out, box-shadow 0.2s;
 }
 .footerList a:hover{

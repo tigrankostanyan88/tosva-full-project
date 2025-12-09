@@ -5,7 +5,6 @@ import "../Styles/LoginRegister.css";
 import { useNotify } from "./Notify";
 
 export default function Signin() {
-  axios.defaults.baseURL = process.env.REACT_APP_API_URL || `http://${window.location.hostname}:3400`;
   axios.defaults.withCredentials = true;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

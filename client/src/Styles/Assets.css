@@ -115,18 +115,18 @@
     gap: 12px;
   }
   
-  .actionButtons button {
-    flex: 1;
-    background: linear-gradient(135deg, var(--card-bg), var(--card-bg-alt));
-    border: 1px solid var(--green-accent);
-    color: var(--green-accent);
-    font-weight: 600;
-    padding: 14px 0;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    letter-spacing: 0.5px;
-  }
+.actionButtons button {
+  flex: 1;
+  background: linear-gradient(135deg, var(--card-bg), var(--card-bg-alt));
+  border: 1px solid var(--green-accent);
+  color: var(--green-accent);
+  font-weight: 600;
+  padding: 14px 0;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  letter-spacing: 0.5px;
+}
   
   .actionButtons button:hover {
     background: var(--green-accent);
@@ -160,7 +160,7 @@
 .earnCard {
   background: rgba(35, 45, 60, 0.65);
   border: 1px solid var(--green-accent);
-  border-radius: 5px;
+  border-radius: var(--radius);
   padding: 16px;
   box-shadow: 0 0 15px rgba(165, 210, 133, 0.12);
   min-height: 110px;
@@ -252,14 +252,14 @@
   padding: 22px;
   width: 90%;
   max-width: 380px;
-  border-radius: 5px;
+  border-radius: var(--radius);
   animation: fadeIn 0.25s ease;
 }
 
 .tosvaContainer .amountInput {
   width: 100%;
   padding: 12px;
-  border-radius: 5px;
+  border-radius: var(--radius);
   border: 1px solid rgba(255,255,255,0.18);
   background: rgba(255,255,255,0.08);
   color: #f8fafc;
@@ -272,7 +272,7 @@
   width: 100%;
   padding: 12px;
   border: none;
-  border-radius: 5px;
+  border-radius: var(--radius);
   font-size: 16px;
   cursor: pointer;
   transition: background 0.2s, transform 0.08s ease-in-out, box-shadow 0.2s;
@@ -295,7 +295,7 @@
   margin-top: 12px;
   background: rgba(255,255,255,0.08);
   padding: 12px;
-  border-radius: 5px;
+  border-radius: var(--radius);
   position: relative;
   border: 1px solid rgba(255,255,255,0.18);
 }
@@ -331,7 +331,7 @@
 }/* Overlay */
 .modalContent {
   padding: 22px;
-  border-radius: 5px;
+  border-radius: var(--radius);
   max-width: 380px;
   width: 90%;
   background: linear-gradient(135deg, var(--card-bg), var(--card-bg-alt));
@@ -344,7 +344,7 @@
   width: 100%;
   padding: 12px;
   margin-top: 10px;
-  border-radius: 5px;
+  border-radius: var(--radius);
   border: 1px solid rgba(255,255,255,0.18);
   background: rgba(255,255,255,0.08);
   color: #f8fafc;
@@ -356,7 +356,7 @@
   width: 100%;
   padding: 12px;
   border: none;
-  border-radius: 5px;
+  border-radius: var(--radius);
   cursor: pointer;
   font-size: 16px;
   transition: background 0.2s, transform 0.08s ease-in-out, box-shadow 0.2s;
@@ -536,7 +536,7 @@
   padding: 12px 16px;
   background: linear-gradient(135deg, var(--card-bg), var(--card-bg-alt));
   border: 1px solid var(--border-soft);
-  border-radius: 6px;
+  border-radius: var(--radius);
   box-shadow: 0 6px 16px rgba(0,0,0,0.28);
 }
 .kvRow {
@@ -555,3 +555,13 @@
   font-size: 13px;
   opacity: 0.95;
 }
+
+/* Uniform radius overrides */
+.avatar img { border-radius: 5px !important; }
+.iconButton { border-radius: 5px !important; }
+.inviteModalContent { border-radius: 5px !important; }
+.inviteIcon { border-radius: 5px !important; }
+.inputGroup input { border-radius: 5px !important; }
+.primaryBtn { border-radius: 5px !important; }
+.secondaryBtn { border-radius: 5px !important; }
+.profileDetails { border-radius: 5px !important; }

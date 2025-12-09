@@ -22,11 +22,13 @@
   will-change: transform, opacity;
   position: relative;
   cursor: pointer;
+  border-radius: var(--radius);
+  box-shadow: 0 8px 22px rgba(0,0,0,0.25);
 }
 
-.notifyItem.success { background: var(--green-muted); }
+.notifyItem.success { background: var(--green-accent); color: #111; box-shadow: 0 4px 12px rgba(0,255,136,0.25); }
 .notifyItem.error { background: #ef4444ac; color: #fff; }
-.notifyItem.info { background: #38bdf8; }
+.notifyItem.info { background: var(--green-accent); color: #111; box-shadow: 0 4px 12px rgba(0,255,136,0.25); }
 
 @keyframes notifyIn {
   from { opacity: 0; transform: translateY(-10px) scale(0.98); }

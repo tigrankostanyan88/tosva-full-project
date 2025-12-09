@@ -17,6 +17,12 @@ const Assets = () => {
   const [inviteCode, setInviteCode] = useState("");
   const [referralCount, setReferralCount] = useState(0);
   const [refRate, setRefRate] = useState(0);
+  const earnings = useMemo(() => {
+    const wb = Number(walletBalance || 0);
+    const td = Number(totalDeposited || 0);
+    const val = wb - td;
+    return val > 0 ? val : 0;
+  }, [walletBalance, totalDeposited]);
   const [isHidden, setIsHidden] = useState(false);
 
   const [showDepositModal, setShowDepositModal] = useState(false);
@@ -191,7 +197,7 @@ const Assets = () => {
         <div className="balanceBreakdown">
           <span className="breakItem">Deposits: ${formatMoney(totalDeposited)}</span>
           <span className="dot">•</span>
-          <span className="breakItem">Wallet: ${formatMoney(walletBalance)}</span>
+          <span className="breakItem">Wallet: ${formatMoney(earnings)}</span>
         </div>
       </div>
 
@@ -215,7 +221,7 @@ const Assets = () => {
 
         <div className="earnCard">
           <p className="earnLabel">{t("TotalEarnings")}</p>
-          <h3 className="earnValue">${formatMoney(walletBalance)}</h3>
+          <h3 className="earnValue">${formatMoney(earnings)}</h3>
         </div>
       </div>
 

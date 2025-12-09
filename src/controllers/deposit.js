@@ -17,14 +17,15 @@ exports.create = catchAsync(async (req, res, next) => {
     const payload = { ...value };
     const deposit = await depositService.createDeposit(req.user.id, payload);
 
+    const receiveAddress = process.env.WALLET_ADDRESS || process.env.EXODUS_USDT_TRON_ADDRESS || null;
     res.status(201).json({
         status: 'success',
         deposit,
-        receive_address: process.env.EXODUS_USDT_TRON_ADDRESS || null,
+        receive_address: receiveAddress,
         wallet_provider: 'EXODUS',
         network: 'TRON_USDT_TRC20',
         reference_code: deposit.reference_code,
-        tron_uri: (process.env.EXODUS_USDT_TRON_ADDRESS ? `tron:${process.env.EXODUS_USDT_TRON_ADDRESS}${deposit.amount ? `?amount=${deposit.amount}` : ''}` : null),
+        tron_uri: (receiveAddress ? `tron:${receiveAddress}${deposit.amount ? `?amount=${deposit.amount}` : ''}` : null),
         time: responseTime(req)
     });
 });
@@ -94,7 +95,7 @@ exports.profile = catchAsync(async (req, res) => {
 
 
     const balance = wallet ? Number(wallet.balance) : 0;
-    const balancePlusDeposits = Number(totalDeposited || 0) + Number(balance || 0);
+    const balancePlusDeposits = Number(balance || 0);
 
     res.status(200).json({
         status: 'success',
@@ -189,7 +190,7 @@ exports.qr = catchAsync(async (req, res, next) => {
     const dep = await DB.models.Deposit.findByPk(id);
     if (!dep || dep.user_id !== req.user.id) return next(new AppError('Deposit not found', 404));
 
-    const address = process.env.EXODUS_USDT_TRON_ADDRESS || null;
+    const address = process.env.WALLET_ADDRESS || process.env.EXODUS_USDT_TRON_ADDRESS || null;
     const amount = Number(req.query.amount || dep.amount || 0);
     const currency = dep.currency || 'USDT';
     const network = 'TRON_USDT_TRC20';

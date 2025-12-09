@@ -48,7 +48,7 @@
   width: 100%;
   font-size: 16px;
   padding: 12px 14px;
-  border-radius: 5px;
+  border-radius: var(--radius);
   cursor: pointer;
   transition: background 0.15s;
 }
@@ -124,7 +124,7 @@ textarea {
   padding: 10px;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 5px;
+  border-radius: var(--radius);
   outline: none;
 }
 
@@ -140,7 +140,7 @@ textarea {
   background: var(--green-muted);
   border: none;
   padding: 8px 14px;
-  border-radius: 5px;
+  border-radius: var(--radius);
   cursor: pointer;
   font-weight: 600;
 }
@@ -149,7 +149,7 @@ textarea {
   background: transparent;
   border: 1px solid var(--border-soft);
   padding: 8px 12px;
-  border-radius: 5px;
+  border-radius: var(--radius);
   cursor: pointer;
   color: var(--text-primary);
 }
@@ -171,7 +171,7 @@ textarea {
   align-items: center;
   padding: 8px 10px;
   background: rgba(255, 255, 255, 0.05);
-  border-radius: 5px;
+  border-radius: var(--radius);
   margin-bottom: 8px;
 }
 
@@ -291,7 +291,7 @@ textarea {
 .settingsSection{
   background: linear-gradient(135deg, var(--card-bg), var(--card-bg-alt));
   border: 1px solid var(--border-soft);
-  border-radius: 10px;
+  border-radius: var(--radius);
   padding: 16px;
   box-shadow: 0 10px 24px rgba(0,0,0,0.35);
   margin-bottom: 15px;
@@ -335,7 +335,7 @@ textarea:focus,
   background: linear-gradient(135deg, var(--card-bg), var(--card-bg-alt));
   border: 1px solid var(--border-soft);
   color: var(--text-primary);
-  border-radius: 10px;
+  border-radius: var(--radius);
   box-shadow: 0 12px 28px rgba(0,0,0,0.45);
 }
 .modalHeader{
@@ -397,6 +397,7 @@ textarea,
 .settingsContent{
   padding: 16px;
   display: block;
+  margin-bottom: 90px;
 }
 .settingsSection{
   background: linear-gradient(135deg, rgba(35,45,60,0.85), rgba(50,80,70,0.75));

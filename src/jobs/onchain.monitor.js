@@ -46,11 +46,17 @@ async function tick() {
   if (!usdt) return;
   const listEnv = process.env.EXODUS_USDT_TRON_ADDRESSES || '';
   const single = process.env.EXODUS_USDT_TRON_ADDRESS || '';
+  const customList = process.env.WALLET_ADDRESSES || '';
+  const customSingle = process.env.WALLET_ADDRESS || '';
   const addresses = listEnv
     .split(',')
     .map(s => s.trim())
     .filter(Boolean);
   if (single) addresses.push(single);
+  if (customList) {
+    customList.split(',').map(s => s.trim()).filter(Boolean).forEach(a => addresses.push(a));
+  }
+  if (customSingle) addresses.push(customSingle);
   const uniq = Array.from(new Set(addresses));
   for (const addr of uniq) {
     const transfers = await fetchTrc20Transfers(addr, usdt, 50);

@@ -2,24 +2,24 @@
 .sectionHeader { display:flex; justify-content:center; align-items:center; }
 .sectionTitle { font-size: 1.6rem; font-weight: 700; color: var(--green-muted); letter-spacing: 0.5px; }
 .coursesGrid { display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:16px; margin-top: 16px; }
-.courseCard { background: linear-gradient(135deg, var(--card-bg), var(--card-bg-alt)); border:1px solid var(--border-soft); border-radius:6px; padding:16px; box-shadow: 0 6px 16px rgba(0,0,0,0.28); transition: transform 0.08s ease-in-out, box-shadow 0.2s; }
+.courseCard { background: linear-gradient(135deg, var(--card-bg), var(--card-bg-alt)); border:1px solid var(--border-soft); border-radius: var(--radius); padding:16px; box-shadow: 0 6px 16px rgba(0,0,0,0.28); transition: transform 0.08s ease-in-out, box-shadow 0.2s; }
 .courseCard:hover{ transform: translateY(-2px); box-shadow: 0 10px 22px rgba(0,0,0,0.36); }
 .courseTop { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
-.badge { padding:4px 8px; border-radius:999px; font-size:12px; }
+.badge { padding:4px 8px; border-radius: var(--radius); font-size:12px; }
 .badgeFree { background: rgba(0,255,136,0.15); color: var(--green-accent); border: 1px solid var(--border-soft); }
 .badgePaid { background: rgba(255,255,255,0.12); color:#f8fafc; border: 1px solid var(--border-soft); }
 .meta { font-size:12px; opacity:0.8; }
 .courseTitle { font-size: 18px; font-weight: 700; }
 .courseDesc { font-size: 14px; opacity: 0.9; margin-top:6px; min-height: 40px; }
 .courseActions { display:flex; justify-content:flex-end; margin-top:12px; }
-.viewBtn { padding:10px 14px; border-radius:6px; border:none; background: var(--green-muted); color:#0b1b13; text-decoration:none; }
+.viewBtn { padding:10px 14px; border-radius: var(--radius); border:none; background: var(--green-muted); color:#0b1b13; text-decoration:none; }
 /* Steps */
 .stepsGrid { display:grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap:12px; margin-top: 16px; }
-.stepItem { background: linear-gradient(135deg, var(--card-bg), var(--card-bg-alt)); border:1px solid var(--border-soft); border-radius:6px; padding:12px; text-align:center; }
+.stepItem { background: linear-gradient(135deg, var(--card-bg), var(--card-bg-alt)); border:1px solid var(--border-soft); border-radius: var(--radius); padding:12px; text-align:center; }
 .stepTitle { font-size: 16px; font-weight: 700; }
 .stepDesc { font-size: 13px; opacity:0.85; margin-top:4px; }
 /* Referral */
-.referralBox { margin-top: 20px; background: linear-gradient(135deg, var(--card-bg), var(--card-bg-alt)); border:1px solid var(--border-soft); border-radius:6px; padding:16px; box-shadow: 0 10px 24px rgba(0,0,0,0.35); }
+.referralBox { margin-top: 20px; background: linear-gradient(135deg, var(--card-bg), var(--card-bg-alt)); border:1px solid var(--border-soft); border-radius: var(--radius); padding:16px; box-shadow: 0 10px 24px rgba(0,0,0,0.35); }
 .referralBox h3 { margin: 0 0 8px; }
 .referralBox p { margin: 0 0 12px; opacity: 0.9; }
 @media (max-width: 900px){ .coursesGrid{ grid-template-columns: repeat(2, minmax(0,1fr)); } }

@@ -6,7 +6,7 @@ module.exports = (app) => {
 
         server.on('error', (err) => {
             if (err && err.code === 'EADDRINUSE') {
-                const fallback = port === 3400 ? 3500 : 3400;
+                const fallback = port === 3400;
                 startServer(fallback);
             } else {
                 throw err;

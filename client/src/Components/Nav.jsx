@@ -35,12 +35,6 @@ function Nav () {
                       >
                         Admin
                       </button>
-                      <button
-                        className="adminLink"
-                        onClick={() => navigate('/admin/referrals')}
-                      >
-                        Referrals
-                      </button>
                     </>
                 )}
             </div>

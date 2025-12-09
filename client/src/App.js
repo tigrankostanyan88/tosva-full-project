@@ -20,7 +20,7 @@ function PrivateRoute({ children, isAuthed, authChecked }) {
 }
 
 function App() {
-  axios.defaults.baseURL = process.env.REACT_APP_API_URL || `http://${window.location.hostname}:3400`;
+  // axios.defaults.baseURL = process.env.REACT_APP_API_URL || '/api';
   axios.defaults.withCredentials = true;
   const [isAuthed, setIsAuthed] = useState(false);
   const [authChecked, setAuthChecked] = useState(false);

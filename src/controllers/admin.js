@@ -64,8 +64,11 @@ module.exports = {
     if (!valid) return res.status(400).json({ status: 'error', message: 'Неверный формат времени (HH:MM)' });
     let uniq = Array.from(new Set(norm));
 
-    // Optional local->UTC conversion when tzOffsetMinutes provided (accept numeric strings too)
-    const parsedOffset = Number(tzOffsetMinutes);
+    let parsedOffset = Number(tzOffsetMinutes);
+    if (!Number.isFinite(parsedOffset)) {
+      const cfgRec = await DB.models.WithdrawConfig.findOne({ where: { key: 'admin_timezone_offset_minutes' } });
+      parsedOffset = Number((cfgRec && cfgRec.value_int) || (process.env.ADMIN_TIMEZONE_OFFSET_MINUTES || 240));
+    }
     if (Number.isFinite(parsedOffset)) {
       const offset = Math.trunc(parsedOffset);
       const toUTC = (hhmm) => {
@@ -131,6 +134,23 @@ module.exports = {
       await rec.save();
     }
     res.status(200).json({ status: 'success', settings: { min_days: rec.value_int }, time: (Date.now() - req.time) + ' ms' });
+  })
+  ,
+  getAdminTimezone: catchAsync(async (req, res, next) => {
+    const DB = require('../models');
+    const rec = await DB.models.WithdrawConfig.findOne({ where: { key: 'admin_timezone_offset_minutes' } });
+    const value = rec ? Number(rec.value_int) : Number(process.env.ADMIN_TIMEZONE_OFFSET_MINUTES || 240);
+    res.status(200).json({ status: 'success', timezone_offset_minutes: value, time: (Date.now() - req.time) + ' ms' });
+  })
+  ,
+  setAdminTimezone: catchAsync(async (req, res, next) => {
+    const DB = require('../models');
+    const val = Number(req.body.timezone_offset_minutes);
+    if (!Number.isFinite(val) || Math.abs(val) > 1440) return next(new AppError('Invalid timezone_offset_minutes', 400));
+    let rec = await DB.models.WithdrawConfig.findOne({ where: { key: 'admin_timezone_offset_minutes' } });
+    if (!rec) rec = await DB.models.WithdrawConfig.create({ key: 'admin_timezone_offset_minutes', value_int: Math.trunc(val) });
+    else { rec.value_int = Math.trunc(val); await rec.save(); }
+    res.status(200).json({ status: 'success', timezone_offset_minutes: rec.value_int, time: (Date.now() - req.time) + ' ms' });
   })
   ,
   forwarders: catchAsync(async (req, res, next) => {

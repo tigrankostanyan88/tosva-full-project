@@ -10,6 +10,8 @@ router.get('/referrals/:userId/export', require('../controllers/admin').referral
 router.get('/code/slots', require('../controllers/admin').getCodeSlots);
 router.post('/code/slots', require('../controllers/admin').setCodeSlots);
 router.get('/code/current', require('../controllers/admin').currentCode);
+router.get('/code/timezone', require('../controllers/admin').getAdminTimezone);
+router.post('/code/timezone', require('../controllers/admin').setAdminTimezone);
 router.get('/exodus/summary', require('../controllers/admin').exodusSummary);
 router.post('/exodus/reaudit', require('../controllers/admin').exodusReaudit);
 router.get('/withdraws', require('../controllers/admin.withdraws').list);
